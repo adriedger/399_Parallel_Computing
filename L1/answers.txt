@@ -1,0 +1,31 @@
+// Andre Driedger 1805536
+// cmpt399 Lab1 written answers
+
+1.1 - Answer 20
+1.2 - I changed the number of times the threads added to the global counter to very high number (1 million), that broke the code.
+
+2.1 - 3
+2.2 - At the top, main thread is at the bottom.
+2.3 - thread0 0x7ffff77f6700
+      thread1 0x7ffff6ff5700
+      mainthread 400794
+2.4 -    -----------------------
+	!	Stack		!
+	!0x7ffff77f6700		!
+	!0x7ffff6ff5700		!
+	!----------------------	!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!			!
+	!-----------------------!
+	!	Exacutable	!
+	!400794 		!
+	 -----------------------
