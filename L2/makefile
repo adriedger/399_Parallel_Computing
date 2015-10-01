@@ -13,7 +13,7 @@ CFLAGS = -Wall -lpthread
 #	$(CC) -o $@ $^ $(CFLAGS)
 
 L1modified: L1modified.c
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -oO $@ $^ $(CFLAGS)
 
-bench: L1modified time.py
-	./time.py ./L1modified
+bench: L1modified mytime
+	./mytime ./L1modified
