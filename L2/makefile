@@ -13,7 +13,7 @@ CFLAGS = -Wall -lpthread
 #	$(CC) -o $@ $^ $(CFLAGS)
 
 L1modified: L1modified.c
-	$(CC) -o -O $@ $^ $(CFLAGS)
+	$(CC) -O -o $@ $^ $(CFLAGS)
 
 bench: L1modified mytime
 	./mytime ./L1modified
