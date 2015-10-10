@@ -7,5 +7,5 @@ CFLAGS = -Wall -lpthread
 matrix: matrix.c
 	$(CC) -O -o $@ $^ $(CFLAGS)
 
-bench: L1modified mytime
-	./mytime ./L1modified
+bench: timer matrix
+	./timer ./matrix 4096 1

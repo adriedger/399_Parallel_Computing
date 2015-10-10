@@ -20,11 +20,12 @@ int LENGTH, THRDS;
 int *makeRandSet(int size){
 	int *set;
 	int i;
+	srand(time(NULL));
 	set = malloc(((size*size) * sizeof(int)));
 	if(set == NULL)
 		return NULL;
 	for(i=0; i<(size*size); i++)
-		set[i] = rand() % 10;
+		set[i] = rand() % 1024;
 	return set;
 }
 
