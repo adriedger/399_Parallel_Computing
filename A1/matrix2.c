@@ -25,7 +25,7 @@ int *makeRandSet(int size, int seed){
 	if(set == NULL)
 		return NULL;
 	for(i=0; i<(size*size); i++)
-		set[i] = rand() % 10;
+		set[i] = rand() % 1024;
 	return set;
 }
 
@@ -33,11 +33,11 @@ void *matrixMulti(void *t){
 	int tid = (long)t;
 	int x, y, i;
 
-	int regular_passes = (LENGTH*LENGTH)/THRDS;
+//	int regular_passes = (LENGTH*LENGTH)/THRDS;
 
-	int A_Row = tid / LENGTH;
-	int B_Column = tid % LENGTH; 
-	int index = tid;
+//	int A_Row = tid / LENGTH;
+//	int B_Column = tid % LENGTH; 
+//	int index = tid;
 
 	struct timespec start, end;
 	clock_gettime(CLOCK_REALTIME, &start);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
 	LENGTH = atoi(argv[argc-2]);
 	THRDS = atoi(argv[argc-1]);
 
-	A = makeRandSet(LENGTH, 1);	
+	A = makeRandSet(LENGTH, time(NULL) - 1);	
 	B = makeRandSet(LENGTH, time(NULL));
 	AB = malloc((LENGTH*LENGTH) * sizeof(int));
 	
