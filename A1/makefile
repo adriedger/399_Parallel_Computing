@@ -13,5 +13,8 @@ matrix2: matrix2.c
 bench: timer matrix
 	./timer ./matrix 4096 1
 
-plot: times.dat times.gnuplot
+times: times.dat times.gnuplot
 	gnuplot < times.gnuplot
+
+speedups: speedups.dat speedups.gnuplot
+	gnuplot < speedups.gnuplot
