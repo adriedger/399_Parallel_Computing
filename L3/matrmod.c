@@ -25,7 +25,7 @@ double *makeRandSet(int size, int seed){
 	if(set == NULL)
 		return NULL;
 	for(i=0; i<(size*size); i++)
-		set[i] = rand() % 1024;
+		set[i] = rand() % 5;
 	return set;
 }
 
@@ -36,7 +36,7 @@ void *matrixMulti(void *t){
 	int regular_passes = (LENGTH*LENGTH)/THRDS;
 
 	int A_Row = tid / LENGTH;
-	int B_Column = tid % LENGTH; 
+	int B_Row = tid % LENGTH;
 	int index = tid;
 
 	struct timespec start, end;
@@ -44,13 +44,14 @@ void *matrixMulti(void *t){
 	
 	for(i=0; i<regular_passes+1; i++){
 		if(index < LENGTH*LENGTH){
-	
-			for(x=A_Row*LENGTH, y=B_Column; x<(A_Row+1)*LENGTH; x++, y+=LENGTH)
+//			int B_Row = index % LENGTH;
+			for(x=A_Row*LENGTH, y=B_Row*LENGTH; x<(A_Row+1)*LENGTH; x++, y++)
 				AB[index] += A[x] * B[y];
 			
 			index += THRDS;
 			A_Row = index / LENGTH;
-			B_Column = index % LENGTH;
+			B_Row = index % LENGTH;
+			/*B_Column = index % LENGTH;*/
 		}
 	}
 	clock_gettime(CLOCK_REALTIME, &end);
