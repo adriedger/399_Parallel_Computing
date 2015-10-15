@@ -4,7 +4,7 @@
 CC = gcc
 CFLAGS = -Wall -lpthread
 
-super: matrix.c
+super: matrmod.c
 	$(CC) -O -o $@ $^ $(CFLAGS)
 
 simple: matrix2.c
