@@ -7,16 +7,15 @@
 __global__ void greyscale(uint8_t *d_out, uint8_t *d_in, int size){
 	
 	int id = blockIdx.x*blockDim.x+threadIdx.x;
-	uint8_t avg;
-	if(size%(id+1) == 0)
-		avg = d_in[id] + d_in[id+1] + d_in[id+2];
-	else if(size%id == 1)
-		avg = d_in[id-1] + d_in[id] + d_in[id+1];
+	if(id%3 == 0)
+		d_out[id] = 0.299f * d_in[id] + 0.587f * d_in[id+1] + 0.114f * d_in[id+2];
+	else if(id%3 == 1)
+		d_out[id] = 0.299f * d_in[id-1] + 0.587f * d_in[id] + 0.114f * d_in[id+1];
 	else
-		avg = d_in[id-2] + d_in[id-1] + d_in[id];
+		d_out[id] = 0.299f * d_in[id-2] + 0.587f * d_in[id-1] + 0.114f * d_in[id];
 	
 //	d_out[id] = avg;
-	d_out[id] = d_in[id];
+//	d_out[id] = d_in[id];
 }
 
 int main(int argc, char **argv){
