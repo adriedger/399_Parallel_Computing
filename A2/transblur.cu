@@ -4,23 +4,20 @@
 #include <tiffio.h>
 #include <stdint.h>
 
-__global__ void blur(uint8_t *d_out, uint8_t *d_in, int width, int height){
+__global__ void blur(uint8_t *d_out, uint8_t *r_in, uint8_t *g_in, uint8_t *b_in, int width, int height){
 	
 	int id = (blockIdx.x*blockDim.x)+threadIdx.x;
 	
 	if(id < width*height){
-		int x_edge = id % width;
-		int y_edge = (id - x_edge) / width;
-		int filter_size = 2;
+		int filter_size = 5;
 		float r_out = 0, g_out = 0, b_out = 0;
 		int count = 0;
-		for(int col = -filter_size; col <= filter_size; ++col){
-			for(int row = -filter_size; row <= filter_size; ++row){
-				if((x_edge+col)>=0 && (x_edge+col)<width && (y_edge+row)>=0 && (y_edge+row)<height){
-					int surroundingIds = (id+col+(row*width))*3;
-					r_out += d_in[surroundingIds];
-					g_out += d_in[surroundingIds+1];
-					b_out += d_in[surroundingIds+2];
+		for(int row = id; row < id+(width*filter_size); row+=width){
+			for(int col = 0; col < filter_size; col++){
+				if(col<(id/width+1)*width && row<width*height){
+					r_out += r_in[row+col];
+					g_out += g_in[row+col];
+					b_out += b_in[row+col];
 					count++;
 				}
 			}
@@ -28,8 +25,23 @@ __global__ void blur(uint8_t *d_out, uint8_t *d_in, int width, int height){
 		d_out[id*3] = r_out/count;
 		d_out[id*3+1] = g_out/count;
 		d_out[id*3+2] = b_out/count;
+
 	}
+
 }
+
+__global__ void transpose(uint8_t *d_in, uint8_t *r, uint8_t *g, uint8_t *b){
+
+	int id = (blockIdx.x*blockDim.x)+threadIdx.x;
+	if(id%3 == 0)
+		r[id/3] = d_in[id];
+	else if(id%3 == 1)
+		g[id/3] = d_in[id];
+	else
+		b[id/3] = d_in[id];
+
+}
+
 
 int main(int argc, char **argv){
   
@@ -80,13 +92,20 @@ int main(int argc, char **argv){
 	cudaMemcpy(d_in, idata, size, cudaMemcpyHostToDevice);
 	uint8_t* d_out;
 	cudaMalloc((void**) &d_out, size);
+	uint8_t* r_in;
+	uint8_t* g_in;
+	uint8_t* b_in;
+	cudaMalloc((void**) &r_in, width*height);
+	cudaMalloc((void**) &g_in, width*height);
+	cudaMalloc((void**) &b_in, width*height);
 
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
 	cudaEventRecord(start);
-	blur<<<size/width, width>>>(d_out, d_in, width, height);
+	transpose<<<size/width, width>>>(d_in, r_in, g_in, b_in);
+	blur<<<size/width, width>>>(d_out, r_in, g_in, b_in, width, height);
 	cudaEventRecord(stop);
 
 	cudaMemcpy(odata, d_out, size, cudaMemcpyDeviceToHost);
