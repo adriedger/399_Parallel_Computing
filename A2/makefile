@@ -4,18 +4,26 @@
 #CC = gcc
 #CFLAGS = -std=c99 -ltiff
 
-
-bleh: greyscale.cu
-	nvcc -o $@ $^ -ltiff
-	./bleh lena.tif copy.tif
-	eog copy.tif
+all: greyscale blur 
 
 
 greyscale: greyscale.cu
 	nvcc -o $@ $^ -ltiff
-
-test: greyscale2.cu
+	./greyscale lena.tif lena_bw.tif 
+	./greyscale cinque_terre_small.tif cts_bw.tif
+	
+blur: blur.cu
 	nvcc -o $@ $^ -ltiff
+	./blur lena.tif lena_blr.tif
+	./blur cinque_terre_small.tif cts_blr.tif
+
+view:
+	eog lena.tif &
+	eog lena_bw.tif &
+	eog lena_blr.tif &
+	eog cinque_terre_small.tif &
+	eog cts_bw.tif &
+	eog cts_blr.tif &
 
 #square: square.cu
 #	nvcc -o $@ $^

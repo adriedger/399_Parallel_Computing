@@ -4,7 +4,7 @@
 #include <tiffio.h>
 #include <stdint.h>
 
-__global__ void greyscale(uint8_t *d_out, uint8_t *d_in, int size){
+__global__ void greyscale(uint8_t *d_out, uint8_t *d_in){
 	
 	int id = blockIdx.x*blockDim.x+threadIdx.x;
 	if(id%3 == 0)
@@ -83,7 +83,7 @@ int main(int argc, char **argv){
 //		printf("%u ", (uint8_t) idata[i]);
 //	dim3 blockDim(512, 1, 1);
 //	dim3 gridDim((uint8_t) ceil((double)(size/blockDim.x)), 1, 1); 
-	greyscale<<<size/width, width>>>(d_out, d_in, size);
+	greyscale<<<size/width, width>>>(d_out, d_in);
 	
 	cudaMemcpy(odata, d_out, size, cudaMemcpyDeviceToHost);
 
