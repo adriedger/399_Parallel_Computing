@@ -18,7 +18,7 @@ __global__ void blur(uint8_t *d_out, uint8_t *d_in, int width, int height){
 	
 	if(id < width*height){
 		int x = id % width;
-		int y = (id - x) / height;
+		int y = (id - x) / width;
 		int filter_size = 4;
 		float r_out = 0, g_out = 0, b_out = 0;
 		int count = 0;
