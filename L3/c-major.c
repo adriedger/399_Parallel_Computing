@@ -7,6 +7,7 @@
 #include <time.h>
 #include <string.h>
 
+
 //int A[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 //int B[] = {1, 0, 0, 0 ,1 ,0 ,0 ,0, 1};
 //int AB[9];
@@ -72,13 +73,13 @@ int main(int argc, char *argv[]){
 	
 	if(!strcmp(argv[argc-3], "-O")){
 		for(i=0; i<LENGTH*LENGTH; i++){
-			printf("%.f ", A[i]);
+			printf("%f ", A[i]);
 			if(i % LENGTH == LENGTH-1)
 				printf("\n");
 		}
 		printf("\n");
 		for(i=0; i<LENGTH*LENGTH; i++){
-			printf("%.f ", B[i]);
+			printf("%f ", B[i]);
 			if(i % LENGTH == LENGTH-1)
 				printf("\n");
 		}
@@ -115,7 +116,7 @@ int main(int argc, char *argv[]){
 	printf("\n");
 	if(!strcmp(argv[argc-3], "-O")){
 		for(i=0; i<LENGTH*LENGTH; i++){
-			printf("%.f ", AB[i]);
+			printf("%f ", AB[i]);
 			if(i % LENGTH == LENGTH-1)
 				printf("\n");
 		}

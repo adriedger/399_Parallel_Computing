@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <xmmintrin.h>
+#include <pmmintrin.h>
+
 
 //int A[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 //int B[] = {1, 0, 0, 0 ,1 ,0 ,0 ,0, 1};
@@ -51,14 +54,40 @@ void *matrixMulti(void *t){
 			index += THRDS;
 			A_Row = index / LENGTH;
 			B_Row = index % LENGTH;
-			/*B_Column = index % LENGTH;*/
 		}
 	}
+/*
+	int row, col;
+	for(){
+		for()
+			AB[row*LENGTH + col] = dotProductSSE(row, col);
+	}
+*/
 	clock_gettime(CLOCK_REALTIME, &end);
 	printf("Kernel time is %f\n", (double)((end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)*1e-9));
 
 	pthread_exit(NULL);
 }
+
+float dotProductSSE(int row, int col) {
+	float prod = 0.0, tmp;
+  	int i;
+  	__m128 x, y, z;
+
+  	for(i=0; i<LENGTH; i+=4) {
+    		x = _mm_load_ps(&A[row*LENGTH + i]);
+   		y = _mm_load_ps(&B[col*LENGTH + i]);
+    		z = _mm_mul_ps(x, y);
+
+   	 x = _mm_hadd_ps(x, x);
+  	 x = _mm_hadd_ps(x, x);
+   	 _mm_store_ss(&tmp, x);
+    	prod += tmp;
+  	}
+
+ 	return prod;
+}
+	
 
 int main(int argc, char *argv[]){
 	
@@ -72,13 +101,13 @@ int main(int argc, char *argv[]){
 	
 	if(!strcmp(argv[argc-3], "-O")){
 		for(i=0; i<LENGTH*LENGTH; i++){
-			printf("%.f ", A[i]);
+			printf("%f ", A[i]);
 			if(i % LENGTH == LENGTH-1)
 				printf("\n");
 		}
 		printf("\n");
 		for(i=0; i<LENGTH*LENGTH; i++){
-			printf("%.f ", B[i]);
+			printf("%f ", B[i]);
 			if(i % LENGTH == LENGTH-1)
 				printf("\n");
 		}
@@ -115,7 +144,7 @@ int main(int argc, char *argv[]){
 	printf("\n");
 	if(!strcmp(argv[argc-3], "-O")){
 		for(i=0; i<LENGTH*LENGTH; i++){
-			printf("%.f ", AB[i]);
+			printf("%f ", AB[i]);
 			if(i % LENGTH == LENGTH-1)
 				printf("\n");
 		}

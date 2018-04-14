@@ -2,9 +2,9 @@
 # CMPT399 A1 matrixmulti makefile
 
 CC = gcc
-CFLAGS = -Wall -lpthread
+CFLAGS = -Wall -lpthread -msse3
 
-super: matrmod.c
+super: ssemulti.c
 	$(CC) -O -o $@ $^ $(CFLAGS)
 
 simple: matrix2.c

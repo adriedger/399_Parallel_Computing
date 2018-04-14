@@ -11,12 +11,14 @@ int counter = 0;
 
 void *printHello(void *threadid){
 	long tid;
+//	long long bleh;
 	tid = (long)threadid;
 	printf("Hey! I'm thread #%ld!\n", tid);
 	int i;
 	for(i=0; i<1000000; i++){
 //		printf("Addin'\n");
-		counter ++;
+//		counter ++; // where sync error is due to context switch 
+		__sync_fetch_and_add(&counter, 1);
 		}
 //	printf("Counter Total is %d\n", counter);
 	pthread_exit(NULL);
